@@ -39,8 +39,6 @@ def fetch_er_data(service_key: str) -> list[dict]:
         node = item.find(tag)
         return node.text.strip() if node else ""
 
-    collected_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     return [
         {
             "기관코드": text(item, "hpid"),
