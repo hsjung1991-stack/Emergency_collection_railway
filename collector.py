@@ -1,9 +1,14 @@
 import os
+import sys
 import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from psycopg2.extras import execute_values
 from datetime import datetime
+
+# Windows 콘솔 UTF-8 출력 설정
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 
 def fetch_er_data(service_key: str) -> list[dict]:
