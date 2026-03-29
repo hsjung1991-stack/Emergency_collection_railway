@@ -16,9 +16,8 @@ def fetch_er_data(service_key: str) -> list[dict]:
     url = "http://apis.data.go.kr/B552657/ErmctInfoInqireService/getEmrrmRltmUsefulSckbdInfoInqire"
     params = {
         "serviceKey": service_key,
-        "STAGE1": "서울특별시",
         "pageNo": "1",
-        "numOfRows": "100",
+        "numOfRows": "1000",
     }
 
     response = requests.get(url, params=params, timeout=30)
