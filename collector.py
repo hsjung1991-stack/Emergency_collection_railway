@@ -4,12 +4,14 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from psycopg2.extras import execute_values
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # Windows 콘솔 UTF-8 출력 설정
 if sys.stdout.encoding != "utf-8":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+# 2. 한국 시간대 객체 생성
+KST = timezone(timedelta(hours=9))
 
 def fetch_er_data(service_key: str) -> list[dict]:
     """공공데이터포털 응급실 실시간 가용 병상 정보 수집"""
@@ -30,6 +32,9 @@ def fetch_er_data(service_key: str) -> list[dict]:
         print("❌ 수집된 데이터가 없습니다. API 키나 URL을 확인하세요.")
         return []
 
+    # 수집시각에 한국 시간(KST) 적용
+    collected_at = datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S")
+    
     def text(item, tag: str) -> str:
         node = item.find(tag)
         return node.text.strip() if node else ""
@@ -102,7 +107,7 @@ def save_to_supabase(data: list[dict], db_url: str) -> None:
 
 
 def run() -> None:
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 데이터 수집 시작...")
+    print(f"[{datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')}] 데이터 수집 시작...")
 
     service_key = os.environ.get("PUBLIC_DATA_SERVICE_KEY")
     db_url = os.environ.get("DATABASE_URL")
